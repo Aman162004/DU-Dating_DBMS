@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - DU Dating</title>
+    <link rel="stylesheet" href="../CSS/base.css">
+    <link rel="stylesheet" href="../CSS/auth.css">
+    <script src="../JS/utils.js"></script>
+    <script src="../JS/api.js"></script>
+    <script src="../JS/auth.js" defer></script>
+    <style>
+        .form-section {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .form-section:last-child {
+            border-bottom: none;
+        }
+        .form-section h3 {
+            color: #FF6B9D;
+            font-size: 16px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        .form-row {
+            display: flex;
+            gap: 10px;
+        }
+        .form-row .form-group {
+            flex: 1;
+        }
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .checkbox-item {
+            background: #f8f9fa;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            user-select: none;
+        }
+        .checkbox-item:hover {
+            background: #fff0f5;
+        }
+        .checkbox-item.selected {
+            background: #FF6B9D;
+            color: white;
+            border-color: #FF6B9D;
+        }
+        .checkbox-item input[type="checkbox"] {
+            display: none;
+        }
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 80px;
+        }
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 0 10px;
+        }
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            color: #999;
+            font-size: 12px;
+        }
+        .progress-step.active {
+            color: #FF6B9D;
+            font-weight: 600;
+        }
+        .progress-step::before {
+            content: '';
+            width: 100%;
+            height: 2px;
+            background: #ddd;
+            position: absolute;
+            top: -10px;
+            left: 0;
+        }
+        .progress-step.active::before {
+            background: #FF6B9D;
+        }
+        .form-step {
+            display: none;
+        }
+        .form-step.active {
+            display: block;
+        }
+        .step-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            flex: 1;
+        }
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-background">
+        <img src="../images/DU_campus.png" alt="DU Campus" class="background-image">
+        <div class="background-overlay"></div>
+    </div>
+    
+    <div class="auth-container">
+        <div class="auth-card" style="max-width: 600px;">
+            <div class="auth-logo">
+                <img src="../images/Delhi_University_Logo.png" alt="DU Dating Logo" class="logo-image">
+                <h1>DU Dating</h1>
+                <p class="tagline">
+                    <img src="../images/Delhi_University_Logo.png" alt="DU Logo" class="du-logo-small">
+                    Create your profile
+                </p>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-step active" data-step="1">Basic Info</div>
+                <div class="progress-step" data-step="2">About You</div>
+                <div class="progress-step" data-step="3">Interests</div>
+            </div>
+
+            <form id="register-form" class="auth-form">
+                <!-- Step 1: Basic Information -->
+                <div class="form-step active" data-step="1">
+                    <div class="form-section">
+                        <h3>📋 Basic Information</h3>
+                        <div class="form-group">
+                            <input type="text" id="register-name" placeholder="Full Name *" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="register-email" placeholder="Email *" required>
+                            <small>Use your .du.ac.in email</small>
+                        </div>
+                        <div class="form-group">
+                            <select id="register-college" required>
+                                <option value="">Select your college *</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="register-password" placeholder="Password *" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="date" id="register-dob" placeholder="Date of Birth *" required>
+                                <small>Birth Date</small>
+                            </div>
+                            <div class="form-group">
+                                <select id="register-gender" required>
+                                    <option value="">Gender *</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Non-binary">Non-binary</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: About You -->
+                <div class="form-step" data-step="2">
+                    <div class="form-section">
+                        <h3>👤 About You</h3>
+                        <div class="form-group">
+                            <textarea id="register-bio" placeholder="Tell us about yourself... *" required></textarea>
+                            <small>Write a short bio (50-500 characters)</small>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="number" id="register-height" placeholder="Height (cm)" min="100" max="250">
+                            </div>
+                            <div class="form-group">
+                                <select id="register-seeking">
+                                    <option value="">Looking for *</option>
+                                    <option value="Male">Men</option>
+                                    <option value="Female">Women</option>
+                                    <option value="Everyone">Everyone</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <select id="register-relationship-goal" required>
+                                <option value="">Relationship Goal *</option>
+                                <option value="Serious Relationship">Serious Relationship</option>
+                                <option value="Casual Dating">Casual Dating</option>
+                                <option value="Friendship">Friendship</option>
+                                <option value="Not Sure">Not Sure</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="register-occupation" placeholder="Occupation/Course (e.g., B.Com Hons)">
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>🌟 Lifestyle</h3>
+                        <div class="form-group">
+                            <select id="register-drinking">
+                                <option value="">Drinking Habits</option>
+                                <option value="Never">Never</option>
+                                <option value="Socially">Socially</option>
+                                <option value="Regularly">Regularly</option>
+                                <option value="Prefer not to say">Prefer not to say</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select id="register-smoking">
+                                <option value="">Smoking Habits</option>
+                                <option value="Never">Never</option>
+                                <option value="Socially">Socially</option>
+                                <option value="Regularly">Regularly</option>
+                                <option value="Prefer not to say">Prefer not to say</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select id="register-exercise">
+                                <option value="">Exercise Frequency</option>
+                                <option value="Daily">Daily</option>
+                                <option value="Weekly">Weekly</option>
+                                <option value="Occasionally">Occasionally</option>
+                                <option value="Never">Never</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Interests & Personality -->
+                <div class="form-step" data-step="3">
+                    <div class="form-section">
+                        <h3>💝 Your Interests</h3>
+                        <small>Select at least 3 interests *</small>
+                        <div class="checkbox-group" id="interests-group">
+                            <!-- Will be populated dynamically -->
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>✨ Personality Traits</h3>
+                        <small>Select traits that describe you</small>
+                        <div class="checkbox-group" id="traits-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" value="Adventurous">
+                                <span>Adventurous</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" value="Creative">
+                                <span>Creative</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" value="Ambitious">
+                                <span>Ambitious</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" value="Funny">
+                                <span>Funny</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" value="Caring">
+                                <span>Caring</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" value="Intellectual">
+                                <span>Intellectual</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" value="Outgoing">
+                                <span>Outgoing</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" value="Calm">
+                                <span>Calm</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" value="Spontaneous">
+                                <span>Spontaneous</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>🎯 What You're Looking For</h3>
+                        <div class="form-group">
+                            <textarea id="register-looking-for" placeholder="Describe your ideal match..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-buttons">
+                    <button type="button" class="btn-secondary" id="prev-btn" style="display: none;">
+                        ← Previous
+                    </button>
+                    <button type="button" class="btn-primary" id="next-btn" style="flex: 1;">
+                        Next →
+                    </button>
+                    <button type="submit" class="btn-primary" id="submit-btn" style="display: none; flex: 1;">
+                        CREATE ACCOUNT
+                    </button>
+                </div>
+            </form>
+
+            <div class="auth-footer">
+                <p>Already have an account? <a href="login.html">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast hidden"></div>
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="spinner"></div>
+    </div>
+</body>
+</html>

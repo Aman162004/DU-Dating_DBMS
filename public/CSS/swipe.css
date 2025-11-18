@@ -1,0 +1,1243 @@
+/* Swipe Page CSS - Tinder Style */
+
+.swipe-container {
+  min-height: 100vh;
+  padding: 80px 0 0;
+  background-image: url('../images/base.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.swipe-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(2px);
+}
+
+.swipe-wrapper {
+  width: 100%;
+  max-width: 500px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  position: relative;
+  z-index: 1;
+  animation: slideUp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes slideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Card Stack */
+.card-stack {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  height: 600px;
+  perspective: 1200px;
+  margin: 0 auto;
+}
+
+.profile-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15),
+              0 8px 32px rgba(0, 0, 0, 0.1),
+              inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  overflow: hidden;
+  cursor: grab;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  user-select: none;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  position: relative;
+}
+
+.profile-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 119, 198, 0.05) 25%,
+    rgba(120, 219, 226, 0.05) 50%,
+    rgba(255, 255, 255, 0.1) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.profile-card:hover {
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2),
+              0 12px 40px rgba(0, 0, 0, 0.15),
+              inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  transform: translateY(-2px);
+}
+
+.profile-card:hover::before {
+  opacity: 1;
+}
+
+.profile-card:active {
+  cursor: grabbing;
+}
+
+.profile-card.swiping {
+  transition: none;
+  cursor: grabbing;
+}
+
+.profile-card.swipe-left {
+  animation: swipeLeft 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+.profile-card.swipe-right {
+  animation: swipeRight 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+@keyframes swipeLeft {
+  0% {
+    transform: translateX(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-120vw) rotate(-35deg);
+    opacity: 0;
+  }
+}
+
+@keyframes swipeRight {
+  0% {
+    transform: translateX(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(120vw) rotate(35deg);
+    opacity: 0;
+  }
+}
+
+/* Card stacking effect - More prominent 3D effect */
+.profile-card:nth-child(1) {
+  z-index: 3;
+  transform: scale(1) translateY(0) rotate(0deg);
+  filter: brightness(1) contrast(1.05);
+}
+
+.profile-card:nth-child(2) {
+  z-index: 2;
+  transform: scale(0.96) translateY(8px) rotate(-1deg);
+  opacity: 0.95;
+  filter: brightness(0.97) blur(0.5px);
+}
+
+.profile-card:nth-child(3) {
+  z-index: 1;
+  transform: scale(0.92) translateY(16px) rotate(1deg);
+  opacity: 0.9;
+  filter: brightness(0.94) blur(1px);
+}
+
+.profile-card:nth-child(n+4) {
+  display: none;
+}
+
+/* Card Image */
+.card-image {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background: linear-gradient(135deg,
+    rgba(255, 105, 180, 0.15) 0%,
+    rgba(135, 206, 235, 0.15) 25%,
+    rgba(255, 182, 193, 0.15) 50%,
+    rgba(173, 216, 230, 0.15) 75%,
+    rgba(255, 218, 185, 0.15) 100%);
+  background-size: 200% 200%;
+  animation: gradientFlow 8s ease-in-out infinite;
+  border-radius: inherit;
+  overflow: hidden;
+  position: relative;
+}
+
+@keyframes gradientFlow {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.card-image::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(to top, 
+    rgba(0,0,0,0.85) 0%, 
+    rgba(0,0,0,0.4) 50%,
+    transparent 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Decorative floating elements */
+.card-image::after {
+  content: '✨';
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  font-size: 20px;
+  opacity: 0.7;
+  z-index: 2;
+  pointer-events: none;
+  animation: sparkleFloat 4s ease-in-out infinite;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+@keyframes sparkleFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+    opacity: 0.7;
+  }
+  25% {
+    transform: translateY(-8px) rotate(90deg);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translateY(-4px) rotate(180deg);
+    opacity: 0.6;
+  }
+  75% {
+    transform: translateY(-12px) rotate(270deg);
+    opacity: 0.8;
+  }
+}
+
+.profile-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 120px;
+  font-weight: 700;
+  color: white;
+  background: linear-gradient(135deg, var(--tinder-primary) 0%, var(--tinder-gold) 100%);
+}
+
+/* Like/Nope Labels - Enhanced Tinder Style */
+.card-label {
+  position: absolute;
+  top: 50px;
+  font-size: 64px;
+  font-weight: 900;
+  padding: 8px 20px;
+  border-radius: 8px;
+  border: 5px solid;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  z-index: 10;
+  text-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.card-label.like {
+  right: 30px;
+  color: #21D07A;
+  border-color: #21D07A;
+  transform: rotate(20deg);
+}
+
+.card-label.nope {
+  left: 30px;
+  color: #FD297B;
+  border-color: #FD297B;
+  transform: rotate(-20deg);
+}
+
+.card-label.star {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #4FC3F7;
+  border-color: #4FC3F7;
+  font-size: 72px;
+}
+
+.profile-card.dragging-right .card-label.like {
+  opacity: 1;
+  animation: pulse 0.3s ease-in-out;
+}
+
+.profile-card.dragging-left .card-label.nope {
+  opacity: 1;
+  animation: pulse 0.3s ease-in-out;
+}
+
+.profile-card.dragging-up .card-label.star {
+  opacity: 1;
+  animation: pulse 0.3s ease-in-out;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* Card Info */
+.card-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  color: white;
+  z-index: 2;
+  max-height: 65%;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.card-info::-webkit-scrollbar {
+  display: none;
+}
+
+.card-name {
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  line-height: 1.2;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+
+.card-details {
+  font-size: 15px;
+  margin-bottom: 12px;
+  opacity: 0.95;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+}
+
+.card-details-icon {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.card-occupation {
+  font-size: 14px;
+  margin-bottom: 10px;
+  opacity: 0.9;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+}
+
+.card-bio {
+  font-size: 14px;
+  margin-bottom: 12px;
+  opacity: 0.92;
+  line-height: 1.4;
+  font-weight: 400;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Matched Qualities Box */
+.matched-qualities-box {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 12px;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.qualities-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.qualities-icon {
+  font-size: 18px;
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  50% { transform: scale(1.2) rotate(180deg); opacity: 0.8; }
+}
+
+.qualities-title {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.qualities-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.quality-item {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.quality-label {
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  opacity: 0.95;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.quality-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.quality-tag {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(8px);
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.match-score {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: linear-gradient(135deg, #FF6B9D 0%, #FF4A7F 100%);
+  color: white;
+  padding: 10px 18px;
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: 700;
+  z-index: 10;
+  box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  animation: matchScorePulse 2s ease-in-out infinite;
+}
+
+@keyframes matchScorePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Card Interests */
+.card-interests {
+  margin-top: 10px;
+}
+
+.interests-label {
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  opacity: 0.9;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.card-interests .interest-tag {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  display: inline-block;
+  margin: 4px 4px 0 0;
+}
+
+/* Image Gallery */
+.image-gallery {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.gallery-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.gallery-image.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.image-indicators {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 10;
+  padding: 6px 12px;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(8px);
+  border-radius: 20px;
+}
+
+.indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.indicator.active {
+  background: white;
+  width: 20px;
+  border-radius: 3px;
+}
+
+.card-info-btn {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 3;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.card-info-btn:hover {
+  background: rgba(255, 255, 255, 0.4);
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+/* Action Buttons - Tinder Style */
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 24px;
+  position: relative;
+  z-index: 1;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.action-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.action-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: scale(0.9);
+  filter: grayscale(0.5);
+}
+
+.action-btn:not(:disabled):hover {
+  transform: translateY(-4px) scale(1.15);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+}
+
+.action-btn:not(:disabled):hover::before {
+  opacity: 1;
+}
+
+.action-btn:not(:disabled):active {
+  transform: translateY(-2px) scale(1.1);
+}
+
+/* Undo Button */
+.undo-btn {
+  width: 52px;
+  height: 52px;
+  color: #FFC629;
+  font-size: 20px;
+}
+
+.undo-btn:hover {
+  background: linear-gradient(135deg, #FFC629, #FFA500);
+  color: white;
+  box-shadow: 0 12px 32px rgba(255, 198, 41, 0.4);
+}
+
+/* Dislike Button */
+.dislike-btn {
+  width: 68px;
+  height: 68px;
+  color: #FD297B;
+  font-size: 28px;
+}
+
+.dislike-btn:hover {
+  background: linear-gradient(135deg, #FD297B, #E91E63);
+  color: white;
+  box-shadow: 0 16px 40px rgba(253, 41, 123, 0.4);
+}
+
+/* Star/Super Like Button */
+.star-btn {
+  width: 60px;
+  height: 60px;
+  color: #4FC3F7;
+  font-size: 24px;
+}
+
+.star-btn:hover {
+  background: linear-gradient(135deg, #4FC3F7, #03A9F4);
+  color: white;
+  box-shadow: 0 14px 36px rgba(79, 195, 247, 0.4);
+}
+
+/* Like Button */
+.like-btn {
+  width: 68px;
+  height: 68px;
+  color: #21D07A;
+  font-size: 28px;
+}
+
+.like-btn:hover {
+  background: linear-gradient(135deg, #21D07A, #4CAF50);
+  color: white;
+  box-shadow: 0 16px 40px rgba(33, 208, 122, 0.4);
+}
+
+/* Boost Button */
+.boost-btn {
+  width: 52px;
+  height: 52px;
+  color: #A960EE;
+  font-size: 20px;
+}
+
+.boost-btn:hover {
+  background: linear-gradient(135deg, #A960EE, #9C27B0);
+  color: white;
+  box-shadow: 0 12px 32px rgba(169, 96, 238, 0.4);
+}
+
+/* Button ripple effect */
+.action-btn::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.4) 50%, transparent 100%);
+  opacity: 0;
+  transform: scale(0);
+  transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.6s ease;
+  pointer-events: none;
+}
+
+.action-btn:not(:disabled):active::after {
+  transform: scale(2);
+  opacity: 1;
+  transition: 0s;
+}
+
+/* Button glow effect */
+.action-btn:not(:disabled):hover {
+  filter: drop-shadow(0 0 20px currentColor);
+}
+
+/* Match Modal - Enhanced Tinder Style */
+.match-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.match-modal.active {
+  display: flex;
+}
+
+.match-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, 
+    rgba(254, 60, 114, 0.95) 0%, 
+    rgba(255, 96, 54, 0.95) 100%);
+  animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.9; }
+}
+
+.match-content {
+  position: relative;
+  text-align: center;
+  color: white;
+  padding: 40px 20px;
+  max-width: 500px;
+  width: 100%;
+  animation: matchSlideUp 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes matchSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(100px) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.match-title {
+  font-size: 72px;
+  font-weight: 900;
+  margin-bottom: 8px;
+  letter-spacing: 4px;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  animation: matchTitlePulse 1s ease-in-out infinite alternate;
+}
+
+@keyframes matchTitlePulse {
+  from { transform: scale(1); }
+  to { transform: scale(1.05); }
+}
+
+.match-subtitle {
+  font-size: 20px;
+  margin-bottom: 40px;
+  font-weight: 500;
+  opacity: 0.95;
+  animation: fadeIn 0.8s ease-out 0.3s backwards;
+}
+
+.match-avatars {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 48px;
+  animation: fadeIn 0.8s ease-out 0.4s backwards;
+}
+
+.match-avatar {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: 6px solid white;
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+  animation: avatarBounce 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.5s backwards;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.match-avatar:nth-child(3) {
+  animation-delay: 0.7s;
+}
+
+@keyframes avatarBounce {
+  0% {
+    transform: scale(0) rotate(-180deg);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.15) rotate(10deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+.match-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.match-heart {
+  animation: heartPulse 1s ease-in-out infinite;
+  filter: drop-shadow(0 4px 12px rgba(255, 107, 157, 0.6));
+}
+
+@keyframes heartPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+.match-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 320px;
+  margin: 0 auto;
+  animation: fadeIn 0.8s ease-out 0.6s backwards;
+}
+
+.btn-send-message {
+  background: white;
+  color: #FE3C72;
+  padding: 18px 40px;
+  border-radius: 30px;
+  border: none;
+  font-size: 18px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  letter-spacing: 1px;
+}
+
+.btn-send-message:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+  background: #fff;
+}
+
+.btn-keep-swiping {
+  background: transparent;
+  color: white;
+  padding: 16px 40px;
+  border-radius: 30px;
+  border: 2px solid white;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 1px;
+}
+
+.btn-keep-swiping:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Confetti Animation */
+.confetti {
+  position: absolute;
+  top: -50px;
+  left: 0;
+  right: 0;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.confetti::before,
+.confetti::after {
+  content: '🎉';
+  position: absolute;
+  font-size: 40px;
+  animation: confettiFall 3s linear infinite;
+}
+
+.confetti::before {
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.confetti::after {
+  right: 10%;
+  animation-delay: 0.5s;
+}
+
+@keyframes confettiFall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(600px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Empty State */
+.no-more-cards {
+  text-align: center;
+  padding: 60px 40px;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.empty-animation {
+  margin-bottom: 28px;
+}
+
+.empty-icon {
+  font-size: 100px;
+  display: inline-block;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+.no-more-cards h2 {
+  font-size: 32px;
+  margin-bottom: 12px;
+  color: var(--gray-800);
+  font-weight: 800;
+}
+
+.no-more-cards p {
+  font-size: 18px;
+  color: var(--gray-600);
+  margin-bottom: 32px;
+  line-height: 1.6;
+}
+
+.btn-refresh {
+  background: linear-gradient(135deg, var(--tinder-primary) 0%, var(--tinder-secondary) 100%);
+  color: white;
+  padding: 16px 40px;
+  border-radius: 30px;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(254, 60, 114, 0.3);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-refresh:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(254, 60, 114, 0.4);
+}
+
+.btn-refresh span {
+  font-size: 18px;
+  animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .swipe-wrapper {
+    padding: 16px;
+  }
+
+  .card-stack {
+    max-width: 100%;
+    height: 550px;
+  }
+}
+
+@media (max-width: 480px) {
+  .swipe-container {
+    padding-top: 70px;
+  }
+
+  .card-stack {
+    height: 500px;
+  }
+
+  .card-name {
+    font-size: 30px;
+  }
+
+  .card-details {
+    font-size: 15px;
+  }
+
+  .card-bio {
+    font-size: 14px;
+  }
+
+  .card-label {
+    font-size: 52px;
+    top: 40px;
+    padding: 6px 16px;
+    border-width: 4px;
+  }
+
+  .card-label.like {
+    right: 20px;
+  }
+
+  .card-label.nope {
+    left: 20px;
+  }
+
+  .action-buttons {
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .undo-btn, .boost-btn {
+    width: 42px;
+    height: 42px;
+  }
+
+  .dislike-btn, .like-btn {
+    width: 56px;
+    height: 56px;
+  }
+
+  .star-btn {
+    width: 50px;
+    height: 50px;
+  }
+
+  .match-title {
+    font-size: 56px;
+  }
+
+  .match-subtitle {
+    font-size: 18px;
+  }
+
+  .match-avatars {
+    gap: 20px;
+  }
+
+  .match-avatar {
+    width: 120px;
+    height: 120px;
+    border-width: 4px;
+  }
+
+  .match-heart svg {
+    width: 45px;
+    height: 45px;
+  }
+
+  .btn-send-message {
+    font-size: 16px;
+    padding: 16px 32px;
+  }
+
+  .btn-keep-swiping {
+    font-size: 14px;
+    padding: 14px 32px;
+  }
+
+  .no-more-cards {
+    padding: 40px 20px;
+  }
+
+  .empty-icon {
+    font-size: 80px;
+  }
+
+  .no-more-cards h2 {
+    font-size: 26px;
+  }
+
+  .no-more-cards p {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 360px) {
+  .card-stack {
+    height: 450px;
+  }
+
+  .card-name {
+    font-size: 26px;
+  }
+
+  .match-avatar {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+/* Footer */
+.footer {
+  background: var(--gray-900);
+  color: white;
+  padding: 60px 20px 30px;
+  margin-top: 40px;
+  position: relative;
+  z-index: 1;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.footer-logo {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.footer-logo .flame {
+  font-size: 32px;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.footer-links a {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: var(--tinder-primary);
+  transform: translateY(-2px);
+}
+
+.footer-text {
+  opacity: 0.7;
+  font-size: 14px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 768px) {
+  .footer-links {
+    gap: 20px;
+  }
+  
+  .footer-links a {
+    font-size: 14px;
+  }
+}

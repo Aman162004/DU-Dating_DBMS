@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - DU Dating</title>
+    <link rel="stylesheet" href="../CSS/base.css">
+    <link rel="stylesheet" href="../CSS/auth.css">
+    <script src="../JS/utils.js"></script>
+    <script src="../JS/api.js"></script>
+    <script src="../JS/auth.js" defer></script>
+</head>
+<body>
+    <div class="auth-background">
+        <img src="../images/DU_campus.png" alt="DU Campus" class="background-image">
+        <div class="background-overlay"></div>
+    </div>
+    
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-logo">
+                <img src="../images/Delhi_University_Logo.png" alt="DU Dating Logo" class="logo-image">
+                <h1>DU Dating</h1>
+                <p class="tagline">
+                    <img src="../images/Delhi_University_Logo.png" alt="DU Logo" class="du-logo-small">
+                    Connect with Delhi University students
+                </p>
+            </div>
+
+            <form id="login-form" class="auth-form">
+                <div class="form-group">
+                    <input type="email" id="login-email" placeholder="Email" required>
+                    <small>Use your .du.ac.in email</small>
+                </div>
+                
+                <div class="form-group">
+                    <input type="password" id="login-password" placeholder="Password" required>
+                </div>
+                
+                <button type="submit" class="btn-primary">LOGIN</button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Don't have an account? <a href="register.html">Sign Up</a></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast hidden"></div>
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="spinner"></div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swipe - DU Dating</title>
+    <link rel="stylesheet" href="../CSS/base.css">
+    <link rel="stylesheet" href="../CSS/swipe.css">
+    <script src="../JS/utils.js"></script>
+    <script src="../JS/api.js"></script>
+    <script src="../JS/swipe.js" defer></script>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-logo">
+            <div>
+                <span class="app-name">DU Dating</span>
+                <div class="app-subtitle">Faculty of Technology, University of Delhi</div>
+            </div>
+        </div>
+        <div class="nav-icons">
+            <a href="home.html" class="nav-icon" title="Home">
+                <span>Home</span>
+            </a>
+            <a href="profile.html" class="nav-icon" title="Profile">
+                <span>Profile</span>
+            </a>
+            <a href="matches.html" class="nav-icon" title="Matches">
+                <span>Matches</span>
+            </a>
+            <a href="#" id="logout-btn" class="nav-icon" title="Logout">
+                <span>Logout</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Swipe Area -->
+    <div class="swipe-container">
+        <div class="swipe-wrapper">
+            <div id="card-stack" class="card-stack">
+                <!-- Cards will be inserted here dynamically -->
+            </div>
+
+            <div id="no-more-cards" class="no-more-cards hidden">
+                <div class="empty-state">
+                    <div class="empty-animation">
+                        <span class="empty-icon">🎉</span>
+                    </div>
+                    <h2>You're all caught up!</h2>
+                    <p>Check back later for new people to match with.</p>
+                    <button class="btn-refresh" onclick="location.reload()">
+                        <span>🔄</span> Refresh
+                    </button>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button id="btn-undo" class="action-btn undo-btn" title="Undo" disabled>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M9 14L4 9L9 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M20 20V13C20 11.9391 19.5786 10.9217 18.8284 10.1716C18.0783 9.42143 17.0609 9 16 9H4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <button id="btn-dislike" class="action-btn dislike-btn" title="Nope">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                        <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    </svg>
+                </button>
+                <button id="btn-star" class="action-btn star-btn" title="Super Like">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                    </svg>
+                </button>
+                <button id="btn-like" class="action-btn like-btn" title="Like">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                    </svg>
+                </button>
+                <button id="btn-boost" class="action-btn boost-btn" title="Boost">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M13 2L3 14h8l-1 8 10-12h-8l1-8z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Match Modal -->
+    <div id="match-modal" class="match-modal hidden">
+        <div class="match-overlay"></div>
+        <div class="match-content">
+            <div class="confetti"></div>
+            <h1 class="match-title">IT'S A MATCH!</h1>
+            <p class="match-subtitle">You and <span id="match-name"></span> have liked each other</p>
+            <div class="match-avatars">
+                <div class="match-avatar" id="match-avatar-1"></div>
+                <div class="match-heart">
+                    <svg width="60" height="60" viewBox="0 0 24 24" fill="#FF6B9D">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                    </svg>
+                </div>
+                <div class="match-avatar" id="match-avatar-2"></div>
+            </div>
+            <div class="match-actions">
+                <button id="send-message-btn" class="btn-send-message">SEND MESSAGE</button>
+                <button id="keep-swiping-btn" class="btn-keep-swiping">KEEP SWIPING</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast hidden"></div>
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <span class="flame">🔥</span>
+                <span>DU Dating</span>
+            </div>
+            <div class="footer-links">
+                <a href="#">About</a>
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
+                <a href="#">Safety</a>
+            </div>
+            <p class="footer-text">© 2025 DU Dating. Made with ❤️ for Delhi University</p>
+        </div>
+    </footer>
+</body>
+</html>

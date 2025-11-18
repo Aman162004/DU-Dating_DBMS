@@ -1,0 +1,536 @@
+========================================
+DU DATING APP - SQL TEST COMMANDS
+========================================
+
+==========================================
+1. DATABASE CONNECTION
+==========================================
+
+# Connect to the database
+psql du_dating
+
+# Or connect from terminal with user
+psql -U postgres du_dating
+
+
+==========================================
+2. VIEW ALL TABLES
+==========================================
+
+# List all tables in the database
+\dt
+
+# Get table structure
+\d users
+\d profiles
+\d colleges
+\d interests
+\d user_interests
+\d swipes
+\d matches
+\d messages
+
+
+==========================================
+3. VIEW ALL DATA - BASIC QUERIES
+==========================================
+
+# View all users
+SELECT * FROM users;
+
+# View all users with their emails and names
+SELECT user_id, email, first_name, created_at FROM users;
+
+# View all profiles
+SELECT * FROM profiles;
+
+# View all colleges
+SELECT * FROM colleges;
+
+# View all interests
+SELECT * FROM interests;
+
+# View all swipes
+SELECT * FROM swipes;
+
+# View all matches
+SELECT * FROM matches;
+
+# View all messages
+SELECT * FROM messages;
+
+
+==========================================
+4. USER & PROFILE QUERIES
+==========================================
+
+# Get users with their profile information
+SELECT 
+    u.user_id, 
+    u.email, 
+    u.first_name, 
+    u.created_at,
+    c.college_name,
+    p.gender, 
+    p.seeking,
+    p.bio,
+    p.date_of_birth,
+    p.height,
+    p.relationship_goal
+FROM users u
+LEFT JOIN colleges c ON u.college_id = c.college_id
+LEFT JOIN profiles p ON u.user_id = p.user_id;
+
+# Get specific user by ID (replace 137 with actual user_id)
+SELECT * FROM users WHERE user_id = 137;
+
+# Get user profile with interests
+SELECT 
+    u.user_id,
+    u.first_name,
+    p.gender,
+    p.seeking,
+    p.bio,
+    ARRAY_AGG(i.interest_name) as interests
+FROM users u
+LEFT JOIN profiles p ON u.user_id = p.user_id
+LEFT JOIN user_interests ui ON u.user_id = ui.user_id
+LEFT JOIN interests i ON ui.interest_id = i.interest_id
+WHERE u.user_id = 137
+GROUP BY u.user_id, u.first_name, p.gender, p.seeking, p.bio;
+
+# Count users by gender
+SELECT gender, COUNT(*) as count
+FROM profiles
+GROUP BY gender;
+
+# Count users by seeking preference
+SELECT seeking, COUNT(*) as count
+FROM profiles
+GROUP BY seeking;
+
+
+==========================================
+5. GENDER FILTERING QUERIES
+==========================================
+
+# Get all male users
+SELECT u.user_id, u.first_name, p.gender, p.seeking
+FROM users u
+JOIN profiles p ON u.user_id = p.user_id
+WHERE p.gender = 'Male';
+
+# Get all female users
+SELECT u.user_id, u.first_name, p.gender, p.seeking
+FROM users u
+JOIN profiles p ON u.user_id = p.user_id
+WHERE p.gender = 'Female';
+
+# Get users seeking females
+SELECT u.user_id, u.first_name, p.gender, p.seeking
+FROM users u
+JOIN profiles p ON u.user_id = p.user_id
+WHERE p.seeking = 'Female';
+
+# Get users seeking males
+SELECT u.user_id, u.first_name, p.gender, p.seeking
+FROM users u
+JOIN profiles p ON u.user_id = p.user_id
+WHERE p.seeking = 'Male';
+
+
+==========================================
+6. POTENTIAL MATCHES QUERIES
+==========================================
+
+# Get potential matches for a male user seeking females (user_id = 137)
+SELECT 
+    u.user_id,
+    u.first_name,
+    p.gender,
+    p.seeking,
+    p.bio,
+    c.college_name,
+    EXTRACT(YEAR FROM AGE(CURRENT_DATE, p.date_of_birth)) AS age
+FROM users u
+JOIN colleges c ON u.college_id = c.college_id
+JOIN profiles p ON u.user_id = p.user_id
+WHERE u.user_id != 137
+    AND u.user_id NOT IN (
+        SELECT swiped_id FROM swipes WHERE swiper_id = 137
+    )
+    AND p.bio IS NOT NULL
+    AND p.gender IS NOT NULL
+    AND p.profile_picture_url IS NOT NULL
+    AND LOWER(p.gender) = 'female'
+ORDER BY RANDOM()
+LIMIT 10;
+
+# Get potential matches for a female user seeking males (user_id = 138)
+SELECT 
+    u.user_id,
+    u.first_name,
+    p.gender,
+    p.seeking,
+    p.bio,
+    c.college_name,
+    EXTRACT(YEAR FROM AGE(CURRENT_DATE, p.date_of_birth)) AS age
+FROM users u
+JOIN colleges c ON u.college_id = c.college_id
+JOIN profiles p ON u.user_id = p.user_id
+WHERE u.user_id != 138
+    AND u.user_id NOT IN (
+        SELECT swiped_id FROM swipes WHERE swiper_id = 138
+    )
+    AND p.bio IS NOT NULL
+    AND p.gender IS NOT NULL
+    AND p.profile_picture_url IS NOT NULL
+    AND LOWER(p.gender) = 'male'
+ORDER BY RANDOM()
+LIMIT 10;
+
+
+==========================================
+7. SWIPES & MATCHES QUERIES
+==========================================
+
+# View all swipes
+SELECT 
+    s.swipe_id,
+    u1.first_name as swiper_name,
+    u2.first_name as swiped_name,
+    s.action,
+    s.swipe_time
+FROM swipes s
+JOIN users u1 ON s.swiper_id = u1.user_id
+JOIN users u2 ON s.swiped_id = u2.user_id
+ORDER BY s.swipe_time DESC;
+
+# Get swipes by specific user (user_id = 137)
+SELECT 
+    s.swipe_id,
+    u.first_name as swiped_user,
+    s.action,
+    s.swipe_time
+FROM swipes s
+JOIN users u ON s.swiped_id = u.user_id
+WHERE s.swiper_id = 137
+ORDER BY s.swipe_time DESC;
+
+# Count likes and dislikes for a user
+SELECT 
+    action,
+    COUNT(*) as count
+FROM swipes
+WHERE swiper_id = 137
+GROUP BY action;
+
+# View all matches
+SELECT 
+    m.match_id,
+    u1.first_name as user1_name,
+    u2.first_name as user2_name,
+    m.match_time
+FROM matches m
+JOIN users u1 ON m.user1_id = u1.user_id
+JOIN users u2 ON m.user2_id = u2.user_id
+ORDER BY m.match_time DESC;
+
+# Get matches for specific user (user_id = 137)
+SELECT 
+    m.match_id,
+    CASE 
+        WHEN m.user1_id = 137 THEN u2.first_name
+        ELSE u1.first_name
+    END as matched_with,
+    m.match_time
+FROM matches m
+JOIN users u1 ON m.user1_id = u1.user_id
+JOIN users u2 ON m.user2_id = u2.user_id
+WHERE m.user1_id = 137 OR m.user2_id = 137
+ORDER BY m.match_time DESC;
+
+# Check for mutual likes between two users (137 and 138)
+SELECT 
+    s1.swiper_id as user1,
+    s1.swiped_id as user2,
+    s1.action as user1_action,
+    s2.action as user2_action
+FROM swipes s1
+JOIN swipes s2 ON s1.swiper_id = s2.swiped_id AND s1.swiped_id = s2.swiper_id
+WHERE s1.swiper_id = 137 AND s1.swiped_id = 138;
+
+
+==========================================
+8. MESSAGES QUERIES
+==========================================
+
+# View all messages
+SELECT 
+    msg.message_id,
+    u.first_name as sender_name,
+    msg.content,
+    msg.sent_at,
+    msg.is_read
+FROM messages msg
+JOIN users u ON msg.sender_id = u.user_id
+ORDER BY msg.sent_at DESC;
+
+# Get messages for a specific match (match_id = 1)
+SELECT 
+    msg.message_id,
+    u.first_name as sender_name,
+    msg.content,
+    msg.sent_at,
+    msg.is_read
+FROM messages msg
+JOIN users u ON msg.sender_id = u.user_id
+WHERE msg.match_id = 1
+ORDER BY msg.sent_at ASC;
+
+# Count unread messages for user in all matches
+SELECT 
+    COUNT(*) as unread_count
+FROM messages msg
+JOIN matches m ON msg.match_id = m.match_id
+WHERE (m.user1_id = 137 OR m.user2_id = 137)
+    AND msg.sender_id != 137
+    AND msg.is_read = false;
+
+
+==========================================
+9. INTERESTS QUERIES
+==========================================
+
+# View all interests
+SELECT * FROM interests ORDER BY interest_name;
+
+# Get user interests (user_id = 137)
+SELECT 
+    u.first_name,
+    i.interest_name
+FROM users u
+JOIN user_interests ui ON u.user_id = ui.user_id
+JOIN interests i ON ui.interest_id = i.interest_id
+WHERE u.user_id = 137;
+
+# Find users with common interests (user_id = 137)
+SELECT 
+    u.user_id,
+    u.first_name,
+    COUNT(*) as common_interests
+FROM users u
+JOIN user_interests ui ON u.user_id = ui.user_id
+WHERE ui.interest_id IN (
+    SELECT interest_id 
+    FROM user_interests 
+    WHERE user_id = 137
+)
+AND u.user_id != 137
+GROUP BY u.user_id, u.first_name
+ORDER BY common_interests DESC;
+
+# Most popular interests
+SELECT 
+    i.interest_name,
+    COUNT(*) as user_count
+FROM interests i
+JOIN user_interests ui ON i.interest_id = ui.interest_id
+GROUP BY i.interest_name
+ORDER BY user_count DESC;
+
+
+==========================================
+10. STATISTICS & ANALYTICS
+==========================================
+
+# Total counts
+SELECT 
+    (SELECT COUNT(*) FROM users) as total_users,
+    (SELECT COUNT(*) FROM swipes) as total_swipes,
+    (SELECT COUNT(*) FROM matches) as total_matches,
+    (SELECT COUNT(*) FROM messages) as total_messages;
+
+# User activity stats
+SELECT 
+    u.user_id,
+    u.first_name,
+    (SELECT COUNT(*) FROM swipes WHERE swiper_id = u.user_id) as swipes_made,
+    (SELECT COUNT(*) FROM swipes WHERE swiped_id = u.user_id) as times_swiped_on,
+    (SELECT COUNT(*) FROM matches WHERE user1_id = u.user_id OR user2_id = u.user_id) as total_matches
+FROM users u
+ORDER BY total_matches DESC
+LIMIT 10;
+
+# Match rate by gender
+SELECT 
+    p.gender,
+    COUNT(DISTINCT u.user_id) as total_users,
+    COUNT(DISTINCT CASE WHEN m.user1_id IS NOT NULL OR m.user2_id IS NOT NULL THEN u.user_id END) as users_with_matches,
+    ROUND(
+        COUNT(DISTINCT CASE WHEN m.user1_id IS NOT NULL OR m.user2_id IS NOT NULL THEN u.user_id END)::numeric / 
+        NULLIF(COUNT(DISTINCT u.user_id), 0) * 100, 
+        2
+    ) as match_rate_percentage
+FROM users u
+LEFT JOIN profiles p ON u.user_id = p.user_id
+LEFT JOIN matches m ON u.user_id = m.user1_id OR u.user_id = m.user2_id
+GROUP BY p.gender;
+
+
+==========================================
+11. DATA INSERTION TESTS
+==========================================
+
+# Insert a test college (if needed)
+INSERT INTO colleges (college_name, location) 
+VALUES ('Test College', 'Delhi') 
+RETURNING college_id;
+
+# Insert a test interest (if needed)
+INSERT INTO interests (interest_name) 
+VALUES ('Testing') 
+RETURNING interest_id;
+
+# Insert a test swipe (user 137 likes user 138)
+INSERT INTO swipes (swiper_id, swiped_id, action) 
+VALUES (137, 138, 'like');
+
+# Insert a test swipe (user 137 dislikes user 139)
+INSERT INTO swipes (swiper_id, swiped_id, action) 
+VALUES (137, 139, 'dislike');
+
+
+==========================================
+12. DATA CLEANUP / DELETION
+==========================================
+
+# Delete specific swipe
+DELETE FROM swipes WHERE swipe_id = 1;
+
+# Delete swipes for specific user
+DELETE FROM swipes WHERE swiper_id = 137;
+
+# Delete a match
+DELETE FROM matches WHERE match_id = 1;
+
+# Delete messages for a match
+DELETE FROM messages WHERE match_id = 1;
+
+# CAUTION: Delete all swipes (use carefully!)
+-- DELETE FROM swipes;
+
+# CAUTION: Delete all matches (use carefully!)
+-- DELETE FROM matches;
+
+# CAUTION: Delete all messages (use carefully!)
+-- DELETE FROM messages;
+
+
+==========================================
+13. UPDATE QUERIES
+==========================================
+
+# Update user profile
+UPDATE profiles 
+SET bio = 'Updated bio text', 
+    seeking = 'Everyone'
+WHERE user_id = 137;
+
+# Update message to read status
+UPDATE messages 
+SET is_read = true 
+WHERE match_id = 1 AND sender_id != 137;
+
+# Update user email
+UPDATE users 
+SET email = 'newemail@srcc.du.ac.in'
+WHERE user_id = 137;
+
+
+==========================================
+14. VERIFICATION QUERIES
+==========================================
+
+# Verify profile picture URLs are set
+SELECT user_id, first_name, 
+    CASE 
+        WHEN profile_picture_url IS NULL THEN 'Missing'
+        ELSE 'Set'
+    END as profile_pic_status
+FROM users u
+LEFT JOIN profiles p ON u.user_id = p.user_id;
+
+# Find incomplete profiles
+SELECT u.user_id, u.first_name
+FROM users u
+LEFT JOIN profiles p ON u.user_id = p.user_id
+WHERE p.bio IS NULL 
+   OR p.gender IS NULL 
+   OR p.profile_picture_url IS NULL;
+
+# Verify all users have profiles
+SELECT 
+    (SELECT COUNT(*) FROM users) as total_users,
+    (SELECT COUNT(*) FROM profiles) as total_profiles,
+    (SELECT COUNT(*) FROM users WHERE user_id NOT IN (SELECT user_id FROM profiles)) as users_without_profiles;
+
+
+==========================================
+15. TESTING GENDER FILTERING
+==========================================
+
+# Simulate the app's potential users query for user 137 (Male seeking Female)
+SELECT 
+    u.user_id, 
+    u.first_name, 
+    c.college_name,
+    p.bio, 
+    p.profile_picture_url,
+    p.gender, 
+    p.seeking,
+    EXTRACT(YEAR FROM AGE(CURRENT_DATE, p.date_of_birth)) AS age
+FROM users u
+JOIN colleges c ON u.college_id = c.college_id
+JOIN profiles p ON u.user_id = p.user_id
+WHERE u.user_id != 137
+    AND u.user_id NOT IN (
+        SELECT swiped_id FROM swipes WHERE swiper_id = 137
+    )
+    AND p.bio IS NOT NULL
+    AND p.gender IS NOT NULL
+    AND p.profile_picture_url IS NOT NULL
+    AND LOWER(p.gender) = LOWER('Female')
+ORDER BY RANDOM()
+LIMIT 20;
+
+
+==========================================
+16. EXIT PSQL
+==========================================
+
+# Exit psql
+\q
+
+
+==========================================
+NOTES:
+==========================================
+
+1. Replace user_id values (137, 138, etc.) with actual user IDs from your database
+2. Some queries are commented out with -- to prevent accidental execution
+3. Use LIMIT to prevent returning too many rows during testing
+4. Always backup your database before running DELETE or UPDATE queries
+5. The gender filtering is case-insensitive using LOWER() function
+
+==========================================
+QUICK REFERENCE:
+==========================================
+
+\dt              - List all tables
+\d table_name    - Describe table structure
+\l               - List all databases
+\q               - Quit psql
+\h               - SQL command help
+\?               - psql command help
+

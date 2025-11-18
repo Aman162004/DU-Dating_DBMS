@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - DU Dating</title>
+    <link rel="stylesheet" href="../CSS/base.css">
+    <link rel="stylesheet" href="../CSS/profile.css">
+    <script src="../JS/utils.js"></script>
+    <script src="../JS/api.js"></script>
+    <script src="../JS/profile.js" defer></script>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-logo">
+            <div>
+                <span class="app-name">DU Dating</span>
+                <div class="app-subtitle">Faculty of Technology, University of Delhi</div>
+            </div>
+        </div>
+        <div class="nav-icons">
+            <a href="home.html" class="nav-icon" title="Home">
+                <span>Home</span>
+            </a>
+            <a href="swipe.html" class="nav-icon" title="Swipe">
+                <span>Swipe</span>
+            </a>
+            <a href="matches.html" class="nav-icon" title="Matches">
+                <span>Matches</span>
+            </a>
+            <a href="#" id="logout-btn" class="nav-icon" title="Logout">
+                <span>Logout</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Profile Content -->
+    <div class="profile-container">
+        <div class="profile-header">
+            <h1>Edit Profile</h1>
+            <p>Make your profile stand out!</p>
+            <div class="profile-completeness">
+                <div class="completeness-label">
+                    <span>Profile Completeness</span>
+                    <span id="completenessPercentage">0%</span>
+                </div>
+                <div class="completeness-bar">
+                    <div id="completenessBar" class="completeness-fill"></div>
+                </div>
+            </div>
+        </div>
+
+        <form id="profile-form" class="profile-form">
+            <div class="profile-section">
+                <h3>Basic Info</h3>
+                
+                <div class="form-group">
+                    <label>Bio</label>
+                    <textarea id="profile-bio" placeholder="Tell us about yourself..." rows="4"></textarea>
+                    <div class="char-counter" id="charCounter">0/500</div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Gender</label>
+                        <select id="profile-gender">
+                            <option value="">Select</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Looking for</label>
+                        <select id="profile-seeking">
+                            <option value="">Select</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Everyone">Everyone</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Date of Birth</label>
+                        <input type="date" id="profile-dob">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Picture URL</label>
+                        <input type="url" id="profile-picture" placeholder="https://...">
+                        <div id="picturePreview" class="picture-preview"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-section">
+                <h3>Interests</h3>
+                <p class="section-description">Select what you're interested in (tap to select/deselect)</p>
+                <div class="interest-counter" id="interestCounter">0/5 selected</div>
+                <div id="interests-container" class="interests-grid">
+                    <!-- Interests will be loaded dynamically -->
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary">SAVE CHANGES</button>
+        </form>
+    </div>
+
+    <div id="toast" class="toast hidden"></div>
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="spinner"></div>
+    </div>
+</body>
+</html>

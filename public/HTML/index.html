@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DU Dating - Find Your Match at Delhi University</title>
+    <link rel="stylesheet" href="../CSS/style.css">
+    <script src="../JS/script.js" defer></script>
+</head>
+<body>
+    <!-- Authentication View (Default) -->
+    <div id="auth-view" class="auth-view">
+        <div class="auth-container">
+            <div class="auth-header">
+                <h1>💕 DU Dating</h1>
+                <p>Connect with students across Delhi University</p>
+            </div>
+
+            <!-- Login Form -->
+            <div id="login-section" class="auth-section">
+                <h2>Welcome Back</h2>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" name="email" placeholder="your.email@college.du.ac.in" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Sign In</button>
+                </form>
+                <p class="auth-toggle">
+                    Don't have an account? 
+                    <a href="#" id="show-register">Create one</a>
+                </p>
+            </div>
+
+            <!-- Register Form -->
+            <div id="register-section" class="auth-section hidden">
+                <h2>Join DU Dating</h2>
+                <form id="register-form">
+                    <div class="form-group">
+                        <label for="register-name">First Name</label>
+                        <input type="text" id="register-name" name="first_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-email">Email</label>
+                        <input type="email" id="register-email" name="email" placeholder="your.email@college.du.ac.in" required>
+                        <small>Must be a valid DU email (*.du.ac.in)</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-college">College</label>
+                        <select id="register-college" name="college_id" required>
+                            <option value="">Select your college</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">Password</label>
+                        <input type="password" id="register-password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create Account</button>
+                </form>
+                <p class="auth-toggle">
+                    Already have an account? 
+                    <a href="#" id="show-login">Sign in</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App View (Hidden by default) -->
+    <div id="app-view" class="app-view hidden">
+        <!-- Navigation Bar -->
+        <nav class="navbar">
+            <div class="nav-brand">
+                <h1>💕 DU Dating</h1>
+            </div>
+            <div class="nav-menu">
+                <button class="nav-btn" data-view="profile-view">👤 Profile</button>
+                <button class="nav-btn active" data-view="swipe-view">🔥 Swipe</button>
+                <button class="nav-btn" data-view="matches-view">💬 Matches</button>
+                <button class="nav-btn" id="logout-btn">🚪 Logout</button>
+            </div>
+        </nav>
+
+        <!-- Profile View -->
+        <div id="profile-view" class="content-view hidden">
+            <div class="profile-container">
+                <h2>Your Profile</h2>
+                <form id="profile-form">
+                    <div class="form-group">
+                        <label for="profile-bio">Bio</label>
+                        <textarea id="profile-bio" name="bio" rows="4" placeholder="Tell us about yourself..."></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="profile-gender">Gender</label>
+                            <select id="profile-gender" name="gender">
+                                <option value="">Select</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="profile-seeking">Seeking</label>
+                            <select id="profile-seeking" name="seeking">
+                                <option value="">Select</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Everyone">Everyone</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="profile-dob">Date of Birth</label>
+                        <input type="date" id="profile-dob" name="date_of_birth">
+                    </div>
+                    <div class="form-group">
+                        <label for="profile-picture">Profile Picture URL</label>
+                        <input type="url" id="profile-picture" name="profile_picture_url" placeholder="https://...">
+                    </div>
+                    <div class="form-group">
+                        <label>Interests</label>
+                        <div id="interests-container" class="interests-grid">
+                            <!-- Interests will be loaded here -->
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Profile</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Swipe View -->
+        <div id="swipe-view" class="content-view">
+            <div class="swipe-container">
+                <div id="swipe-card" class="swipe-card">
+                    <!-- Profile card will be loaded here -->
+                    <p class="loading">Loading profiles...</p>
+                </div>
+                <div id="swipe-actions" class="swipe-actions hidden">
+                    <button class="btn btn-dislike" id="dislike-btn">👎 Pass</button>
+                    <button class="btn btn-like" id="like-btn">❤️ Like</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Matches View -->
+        <div id="matches-view" class="content-view hidden">
+            <div class="matches-container">
+                <h2>Your Matches</h2>
+                <ul id="matches-list" class="matches-list">
+                    <!-- Matches will be loaded here -->
+                </ul>
+            </div>
+        </div>
+
+        <!-- Chat View -->
+        <div id="chat-view" class="content-view hidden">
+            <div class="chat-container">
+                <div class="chat-header">
+                    <button class="btn btn-back" id="back-to-matches">← Back</button>
+                    <h3 id="chat-user-name">Chat</h3>
+                </div>
+                <div id="messages-container" class="messages-container">
+                    <!-- Messages will be loaded here -->
+                </div>
+                <form id="message-form" class="message-form">
+                    <input type="text" id="message-input" placeholder="Type a message..." required>
+                    <button type="submit" class="btn btn-send">Send</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast hidden"></div>
+
+    <!-- Loading Overlay -->
+    <div id="loading" class="loading-overlay hidden">
+        <div class="spinner"></div>
+    </div>
+</body>
+</html>

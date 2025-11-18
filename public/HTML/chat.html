@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - DU Dating</title>
+    <link rel="stylesheet" href="../CSS/base.css">
+    <link rel="stylesheet" href="../CSS/chat.css">
+    <script src="../JS/utils.js"></script>
+    <script src="../JS/api.js"></script>
+    <script src="../JS/chat.js" defer></script>
+</head>
+<body>
+    <!-- Chat Container -->
+    <div class="chat-container">
+        <!-- Chat Header -->
+        <div class="chat-header">
+            <a href="matches.html" class="back-btn">
+                <span>←</span>
+            </a>
+            <div class="chat-user-info">
+                <div id="chat-avatar" class="chat-avatar"></div>
+                <div class="chat-user-details">
+                    <h3 id="chat-user-name">Loading...</h3>
+                    <p id="chat-user-college"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Messages Area -->
+        <div id="messages-container" class="messages-container">
+            <!-- Messages will be loaded dynamically -->
+        </div>
+
+        <!-- Message Input -->
+        <form id="message-form" class="message-form">
+            <input 
+                type="text" 
+                id="message-input" 
+                placeholder="Type a message..." 
+                autocomplete="off"
+                required
+            >
+            <button type="submit" class="send-btn">
+                <span>➤</span>
+            </button>
+        </form>
+    </div>
+
+    <div id="toast" class="toast hidden"></div>
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="spinner"></div>
+    </div>
+</body>
+</html>

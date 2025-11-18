@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matches - DU Dating</title>
+    <link rel="stylesheet" href="../CSS/base.css">
+    <link rel="stylesheet" href="../CSS/matches.css">
+    <script src="../JS/utils.js"></script>
+    <script src="../JS/api.js"></script>
+    <script src="../JS/matches.js" defer></script>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-logo">
+            <div>
+                <span class="app-name">DU Dating</span>
+                <div class="app-subtitle">Faculty of Technology, University of Delhi</div>
+            </div>
+        </div>
+        <div class="nav-icons">
+            <a href="home.html" class="nav-icon" title="Home">
+                <span>Home</span>
+            </a>
+            <a href="swipe.html" class="nav-icon" title="Swipe">
+                <span>Swipe</span>
+            </a>
+            <a href="profile.html" class="nav-icon" title="Profile">
+                <span>Profile</span>
+            </a>
+            <a href="#" id="logout-btn" class="nav-icon" title="Logout">
+                <span>Logout</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Matches Content -->
+    <div class="matches-container">
+        <div class="matches-header">
+            <h1>Matches</h1>
+            <p id="match-count">0 matches</p>
+        </div>
+
+        <div id="matches-grid" class="matches-grid">
+            <!-- Matches will be loaded dynamically -->
+        </div>
+
+        <div id="no-matches" class="no-matches hidden">
+            <div class="empty-state">
+                <span class="empty-icon">💔</span>
+                <h2>No matches yet</h2>
+                <p>Start swiping to find your match!</p>
+                <a href="swipe.html" class="btn-primary">START SWIPING</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast hidden"></div>
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="spinner"></div>
+    </div>
+</body>
+</html>
